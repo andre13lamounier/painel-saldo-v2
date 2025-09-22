@@ -1,10 +1,10 @@
-
-
-
-    
-    
-    Painel de Saldo
-    
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Saldo</title>
+    <style>
         body {
             margin: 0;
             background: #0b1020;
@@ -78,68 +78,36 @@
             margin: 0 0 8px 0;
             font-size: 14px;
         }
-    
-
-
-    
-
-        
-Entrar
-
-        
-
-            
-        
-
-        
-
-            
-        
-
-        
-
-
-        Entrar
-    
-
-    
-
-        
-Painel de Saldo
-
-        
-
-            
-Saldo Total
-
-            
-R$ 0,00
-
-        
-
-        
-
-            
-Aplicação CDB
-
-            
-R$ 0,00
-
-        
-
-        
-
-            
-Aplicação CDI
-
-            
-R$ 0,00
-
-        
-
-    
-
-    
+    </style>
+</head>
+<body>
+    <div id="loginView" class="login">
+        <h1>Entrar</h1>
+        <div class="field">
+            <input type="email" id="email" placeholder="lamounier16@gmail.com">
+        </div>
+        <div class="field">
+            <input type="password" id="password" placeholder="helilamounier16">
+        </div>
+        <div class="error" id="loginError"></div>
+        <button id="loginBtn">Entrar</button>
+    </div>
+    <div id="app" class="app">
+        <h1>Painel de Saldo</h1>
+        <div class="card">
+            <h3>Saldo Total</h3>
+            <div class="value" id="saldoTotal">R$ 0,00</div>
+        </div>
+        <div class="card">
+            <h3>Aplicação CDB</h3>
+            <div class="value" id="aplicacaoCDB">R$ 0,00</div>
+        </div>
+        <div class="card">
+            <h3>Aplicação CDI</h3>
+            <div class="value" id="aplicacaoCDI">R$ 0,00</div>
+        </div>
+    </div>
+    <script>
         const EXPECTED_USER = 'lamounier16@gmail.com';
         const EXPECTED_PASS = 'helilamounier16';
         
@@ -170,5 +138,6 @@ R$ 0,00
                 document.getElementById('loginBtn').click();
             }
         });
-    
-
+    </script>
+</body>
+</html>
