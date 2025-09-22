@@ -1,8 +1,113 @@
-Painelbody{background:#0b1020;color:#fff;font-family:Arial;padding:20px}.login{background:#121a2a;padding:20px;border-radius:16px;max-width:300px;margin:50px auto}input{width:100%;padding:10px;margin:5px 0;border:1px solid #333;background:#101a2e;color:#fff;border-radius:8px}button{width:100%;padding:12px;background:#1d3a66;color:#fff;border:none;border-radius:8px;cursor:pointer}.error{color:#ff6b6b}.app{display:none}.card{background:#121a2a;padding:16px;margin:10px 0;border-radius:12px}
+
+
+
+    
+    
+    Painel de Saldo
+    
+        body{margin:0;background:#0b1020;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:grid;place-items:center}
+        .login{background:#121a2a;padding:20px;border-radius:16px;width:300px;border:1px solid #233456}
+        .field{margin:10px 0}
+        input{width:100%;padding:10px;border:1px solid #333;background:#101a2e;color:#fff;border-radius:8px;box-sizing:border-box}
+        button{width:100%;padding:12px;background:#1d3a66;color:#fff;border:none;border-radius:8px;cursor:pointer}
+        button:hover{background:#2a4d7a}
+        .error{color:#ff6b6b;font-size:13px;min-height:18px}
+        .app{display:none;padding:20px;width:100%;max-width:800px}
+        .card{background:#121a2a;padding:16px;margin:10px 0;border-radius:12px;border:1px solid #233456}
+        .value{font-size:24px;font-weight:bold;color:#4da3ff;margin:8px 0}
+        h1{color:#e6eefc;margin-bottom:20px}
+        h3{color:#9fb3d1;margin:0 0 8px 0;font-size:14px}
+    
+
+
+    
+
+        
 Entrar
 
-Entrar
+        
+
+            
+        
+
+        
+
+            
+        
+
+        
+
+
+        Entrar
+    
+
+    
+
+        
 Painel de Saldo
+
+        
+
+            
 Saldo Total
+
+            
 R$ 0,00
-const EXPECTED_USER="lamounier16@gmail.com";const EXPECTED_PASS="helilamounier16";function showApp(){document.getElementById("loginView").style.display="none";document.getElementById("app").style.display="block"}document.getElementById("loginBtn").addEventListener("click",()=>{const email=document.getElementById("email").value.trim();const pass=document.getElementById("password").value;const errEl=document.getElementById("loginError");if(email===EXPECTED_USER&&pass===EXPECTED_PASS){errEl.textContent="";showApp();document.getElementById("saldoTotal").textContent="R$ 150.000,00"}else{errEl.textContent="Usuário ou senha inválidos."}})
+
+        
+
+        
+
+            
+Aplicação CDB
+
+            
+R$ 0,00
+
+        
+
+        
+
+            
+Aplicação CDI
+
+            
+R$ 0,00
+
+        
+
+    
+
+    
+        const EXPECTED_USER='lamounier16@gmail.com';
+        const EXPECTED_PASS='helilamounier16';
+        
+        function showApp(){
+            document.getElementById('loginView').style.display='none';
+            document.getElementById('app').style.display='block';
+        }
+        
+        document.getElementById('loginBtn').addEventListener('click',()=>{
+            const email=document.getElementById('email').value.trim();
+            const pass=document.getElementById('password').value;
+            const errEl=document.getElementById('loginError');
+            
+            if(email===EXPECTED_USER&&pass===EXPECTED_PASS){
+                errEl.textContent='';
+                showApp();
+                document.getElementById('saldoTotal').textContent='R$ 150.000,00';
+                document.getElementById('aplicacaoCDB').textContent='R$ 100.000,00';
+                document.getElementById('aplicacaoCDI').textContent='R$ 50.000,00';
+            }else{
+                errEl.textContent='Usuário ou senha inválidos.';
+            }
+        });
+        
+        // Permitir login com Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginView').style.display !== 'none') {
+                document.getElementById('loginBtn').click();
+            }
+        });
+    
+
