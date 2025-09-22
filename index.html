@@ -1,143 +1,1977 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Saldo</title>
-    <style>
-        body {
-            margin: 0;
-            background: #0b1020;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-        }
-        .login {
-            background: #121a2a;
-            padding: 20px;
-            border-radius: 16px;
-            width: 300px;
-            border: 1px solid #233456;
-        }
-        .field {
-            margin: 10px 0;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #333;
-            background: #101a2e;
-            color: #fff;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #1d3a66;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #2a4d7a;
-        }
-        .error {
-            color: #ff6b6b;
-            font-size: 13px;
-            min-height: 18px;
-        }
-        .app {
-            display: none;
-            padding: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-        .card {
-            background: #121a2a;
-            padding: 16px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: 1px solid #233456;
-        }
-        .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4da3ff;
-            margin: 8px 0;
-        }
-        h1 {
-            color: #e6eefc;
-            margin-bottom: 20px;
-        }
-        h3 {
-            color: #9fb3d1;
-            margin: 0 0 8px 0;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <div id="loginView" class="login">
-        <h1>Entrar</h1>
-        <div class="field">
-            <input type="email" id="email" placeholder="lamounier16@gmail.com">
-        </div>
-        <div class="field">
-            <input type="password" id="password" placeholder="helilamounier16">
-        </div>
-        <div class="error" id="loginError"></div>
-        <button id="loginBtn">Entrar</button>
-    </div>
-    <div id="app" class="app">
-        <h1>Painel de Saldo</h1>
-        <div class="card">
-            <h3>Saldo Total</h3>
-            <div class="value" id="saldoTotal">R$ 0,00</div>
-        </div>
-        <div class="card">
-            <h3>Aplicação CDB</h3>
-            <div class="value" id="aplicacaoCDB">R$ 0,00</div>
-        </div>
-        <div class="card">
-            <h3>Aplicação CDI</h3>
-            <div class="value" id="aplicacaoCDI">R$ 0,00</div>
-        </div>
-    </div>
-    <script>
-        const EXPECTED_USER = 'lamounier16@gmail.com';
-        const EXPECTED_PASS = 'helilamounier16';
+
+
+
+
+
+
+
+
+
+
+
+    
+:root {
+  --fontStack-monospace: "Monaspace Neon", ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+}
+
+
+
+
+
+  
+    
+  
+  
+  
+  
+  
+  
+
+  
+  
+
+
+  
+
+  
+    :root {
+      --tab-size-preference: 4;
+    }
+
+    pre, code {
+      tab-size: var(--tab-size-preference);
+    }
+  
+
+    
+    
+    
+    
+  
+
+  
+
+  {"locale":"en","featureFlags":["alternate_user_config_repo","api_insights_show_missing_data_banner","arianotify_comprehensive_migration","attestations_filtering","attestations_sorting","billing_fixed_amount_metered_configured_discounts","billing_hard_budget_limits_for_licenses","client_version_header","codespaces_prebuild_region_target_update","contact_requests_implicit_opt_in","contact_sales_locale_utm_medium","contentful_lp_enterprise","contentful_lp_footnotes","copilot_agent_tasks_btn_code_nav","copilot_agent_tasks_btn_code_view","copilot_agent_tasks_btn_code_view_lines","copilot_agent_tasks_btn_file_reference","copilot_api_agentic_issue_marshal_yaml","copilot_api_draft_issue_code_search","copilot_chat_attach_multiple_images","copilot_chat_disable_model_picker_while_streaming","copilot_chat_file_redirect","copilot_chat_opening_thread_switch","copilot_chat_reduce_quota_checks","copilot_chat_search_bar_redirect","copilot_chat_selection_attachments","copilot_chat_vision_in_claude","copilot_chat_vision_skip_thread_create","copilot_coding_agent_diff_stats","copilot_custom_copilots_feature_preview","copilot_duplicate_thread","copilot_features_raycast_logo","copilot_free_to_paid_telem","copilot_ftp_hyperspace_upgrade_prompt","copilot_ftp_settings_upgrade","copilot_ftp_upgrade_to_pro_from_models","copilot_ftp_your_copilot_settings","copilot_generate_commit_message_blob_public_preview","copilot_global_overlay_v2","copilot_immersive_agent_branch_selection","copilot_immersive_structured_model_picker","copilot_issue_list_show_more","copilot_loops_share_button","copilot_no_floating_button","copilot_pipes_github_graphql_nodes","copilot_premium_request_quotas","copilot_read_shared_conversation","copilot_share_active_subthread","copilot_show_copilot_sub_issues_button_on_issues_page","copilot_spark_allow_empty_commit","copilot_spark_loading_webgl","copilot_spark_progressive_error_handling","copilot_spark_single_user_iteration","copilot_spark_use_billing_headers","copilot_spark_write_iteration_history_to_git","copilot_stable_conversation_view","copilot_workbench_agent_seed_tool","copilot_workbench_cache","copilot_workbench_connection_reload_banner","copilot_workbench_preview_analytics","copilot_workbench_ratelimit_fallback","copilot_workbench_refresh_on_wsod","copilot_workbench_synthetic_generation","dashboard_public_preview","direct_to_salesforce","dotcom_chat_client_side_skills","failbot_report_error_react_apps_on_page","fgpat_permissions_selector_redesign","ghost_pilot_confidence_truncation_25","ghost_pilot_confidence_truncation_40","github_models_scheduled_hydro_events","global_nav_copilot_a11y_fix","global_nav_reductive_user_menu","global_search_multi_orgs","global_sso_banner","hpc_improve_dom_insertion_observer","hyperspace_diff_view","inp_reduced_threshold","insert_before_patch","issue_fields_report_usage","issues_expanded_file_types","issues_react_blur_item_picker_on_close","issues_react_bots_timeline_pagination","issues_react_include_bots_in_pickers","issues_react_nested_picker_prevent_autoclose","issues_react_prohibit_title_fallback","issues_react_remove_placeholders","issues_sticky_sidebar","kb_semantic_api_migration","lifecycle_label_name_updates","link_contact_sales_swp_marketo","marketing_pages_search_explore_provider","mcp_registry_install","memex_mwl_filter_field_delimiter","memex_roadmap_drag_style","migrate_toasts_to_banners_web_notifications","new_traffic_page_banner","override_pulse_legacy_url","primer_react_segmented_control_tooltip","primer_react_unified_portal_root","record_sso_banner_metrics","releases_update_ref_selector","remove_child_patch","repos_insights_remove_new_url","repository_suggester_elastic_search","sample_network_conn_type","scheduled_reminders_updated_limits","show_edit_on_default_option","site_homepage_contentful","site_msbuild_webgl_hero","spark_commit_on_default_branch","spark_show_data_access_on_publish","spark_sync_repository_after_iteration","viewscreen_sandbox","webp_support","workbench_default_sonnet4","workbench_store_readonly"],"login":"andre13lamounier","copilotApiOverrideUrl":"https://api.individual.githubcopilot.com"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  Page not found · GitHub
+
+
+
+  
+  
+  
+  
+
+    
+  
+
+
+  
+
+
+
+
+  
+  
+
+  
+  
+
+    
+
+
+
+  
+
+  
+
+
+
+
+    
+
+  
+
+    
+
+    
+
+      
+
+      
+
+    
+    
+    
+
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+      
+      
+
+
+      
+
+
+      
+      
+      
+
         
-        function showApp() {
-            document.getElementById('loginView').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-        }
+
+
+  
+  
+  
+  
+
+  
+
+      
+  
+  
+  
+  
+
+  
+
+
+
+      
+
+
+    
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+
+
+
+
+  
+
+  
+
+  
+    
+
         
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value;
-            const errEl = document.getElementById('loginError');
+
+
+      
+
+
+
+    
+
+      Skip to content
+
+      
+    
+      
+      
+      
+
+
+
+  
+  {"props":{"docsUrl":"https://docs.github.com/get-started/accessibility/keyboard-shortcuts"}}
+  
+
+
+
+
+
+
+
+
+      
+
+          
+
+                  
+      
+Navigation Menu
+
+
+
+        
+
+        
+
+          
+
             
-            if (email === EXPECTED_USER && pass === EXPECTED_PASS) {
-                errEl.textContent = '';
-                showApp();
-                document.getElementById('saldoTotal').textContent = 'R$ 150.000,00';
-                document.getElementById('aplicacaoCDB').textContent = 'R$ 100.000,00';
-                document.getElementById('aplicacaoCDI').textContent = 'R$ 50.000,00';
-            } else {
-                errEl.textContent = 'Usuário ou senha inválidos.';
-            }
-        });
+
+                  
+  
+  
+            
+    
+
+
+
+
+  
+    
+
+  
+
+    
+
+      
+
+        Global navigation
+      
+
+            
+
+      
+
         
-        // Permitir login com Enter
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.getElementById('loginView').style.display !== 'none') {
-                document.getElementById('loginBtn').click();
-            }
-        });
-    </script>
-</body>
-</html>
+    
+
+
+
+    
+
+    
+
+      
+    
+
+    
+
+  
+
+  
+
+
+      
+        
+    
+
+        
+  
+  
+    
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Home
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Issues
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Pull requests
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Projects
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Discussions
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Codespaces
+      
+
+  
+
+
+
+        
+          
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Copilot
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Spaces
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Download Copilot
+      
+        
+          
+    
+
+        
+
+        
+
+          
+
+
+    
+    
+    
+      
+        
+          Visual Studio Code
+      
+
+  
+
+
+
+          
+
+
+    
+    
+    
+      
+        
+          Visual Studio
+      
+
+  
+
+
+
+          
+
+
+    
+    
+    
+      
+        
+          Xcode
+      
+
+  
+
+
+
+          
+
+
+    
+    
+    
+      
+        
+          JetBrains
+      
+
+  
+
+
+
+          
+
+
+    
+    
+    
+      
+        
+          Neovim
+      
+
+  
+
+
+
+          
+
+
+    
+    
+    
+      
+        
+          CLI
+      
+
+  
+
+
+
+
+
+
+
+
+        
+          
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Explore
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          Marketplace
+      
+
+  
+
+
+
+        
+          
+
+
+    
+    
+    
+        
+          
+    
+
+        
+      
+        
+          MCP Registry
+      
+
+  
+
+
+
+
+  
+
+
+        
+
+          
+  
+    
+    
+    Loading
+
+
+
+
+
+      
+
+
+
+
+      
+          
+© 2025 GitHub, Inc.
+
+
+          
+
+              About
+              Blog
+              Terms
+              Privacy
+              Security
+              Status
+
+
+
+
+
+      
+      
+
+
+
+  
+
+    
+
+  
+
+    
+
+      
+
+      
+        Uh oh!
+
+
+      
+        
+There was an error while loading. Please reload this page.
+
+
+
+
+
+
+  
+
+
+  
+
+
+            
+
+
+            
+              
+    
+
+            
+
+              
+  
+
+    
+      
+
+
+
+    
+  
+
+
+
+          
+
+          
+
+              
+
+                  
+
+
+
+  
+
+      
+            
+            
+    
+
+          
+
+
+
+
+  
+
+    
+
+      
+        
+    
+
+      
+
+                
+            
+
+              
+                  Type / to search
+              
+            
+
+          
+
+    
+
+
+
+  
+
+
+
+
+    
+
+    
+
+
+  
+      
+Search code, repositories, users, issues, pull requests...
+
+    
+
+      
+          
+        
+
+          
+  
+    
+
+      
+        Search
+      
+      
+
+          
+            
+    
+
+          
+        
+
+          
+
+
+          
+
+            
+
+
+            
+          
+
+        
+
+          Clear
+            
+    
+
+
+
+      
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+                
+
+
+        
+
+      
+
+        
+          
+    
+
+        
+        
+
+    
+
+    
+
+
+
+          
+
+            Search syntax tips            
+
+
+                
+    Give feedback
+  
+
+          
+
+        
+
+
+
+
+    
+
+
+
+  
+
+  
+
+
+  
+
+    
+
+  
+    
+
+  
+
+    
+
+      
+
+        Provide feedback
+      
+
+        
+    
+
+    
+
+      
+    
+
+    
+
+  
+
+  
+
+
+      
+        
+        
+          
+We read every piece of feedback, and take your input very seriously.
+
+          
+          
+          Include my email address so I can be contacted
+
+
+      
+      
+              Cancel
+
+              Submit feedback
+
+
+
+
+
+    
+    
+
+  
+    
+
+  
+
+    
+
+      
+
+        Saved searches
+      
+
+        
+Use saved searches to filter your results more quickly
+
+    
+
+    
+
+      
+    
+
+    
+
+  
+
+  
+
+
+      
+        
+        
+
+
+
+        
+
+        
+          
+
+
+
+          
+
+          
+
+            Name
+            
+              
+              
+            
+          
+
+
+          
+
+            Query
+            
+          
+
+
+          
+
+            To see all available qualifiers, see our documentation.
+          
+
+        
+
+
+        
+
+          
+
+
+        
+
+
+
+
+      
+      
+              Cancel
+
+              Create saved search
+
+
+
+
+    
+  
+
+  
+
+
+              
+
+
+            
+              
+
+  
+
+    
+          
+    
+
+Chat with Copilot
+
+      
+    
+    
+
+      
+        
+            
+    
+
+Open Copilot…
+
+          
+        
+    
+
+  
+
+
+
+
+
+            
+
+                 
+        
+      
+        
+    
+
+      
+    
+    
+
+  
+Create new…
+
+      
+    
+
+        
+                  
+    
+
+Your issues
+
+                  
+    
+
+Your pull requests
+
+            
+
+            
+              
+      
+    
+
+
+
+    You have no unread notifications
+
+
+            
+
+              
+  
+  
+    
+    
+    
+  
+
+  
+
+
+
+  
+
+    
+
+  
+
+    
+
+      
+
+      
+        Uh oh!
+
+
+      
+        
+There was an error while loading. Please reload this page.
+
+
+
+
+
+
+  
+
+
+  
+
+
+            
+
+
+            
+
+                
+
+
+
+
+            
+
+          
+
+        
+
+
+
+    
+
+
+      
+
+  
+        
+    
+
+        You signed in with another tab or window. Reload to refresh your session.
+        You signed out in another tab or window. Reload to refresh your session.
+        You switched accounts on another tab or window. Reload to refresh your session.
+
+      
+    
+
+Dismiss alert
+
+
+  
+
+
+        
+          
+    
+
+
+  
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+  
+
+
+
+
+    
+  
+  
+
+
+
+
+
+
+
+
+  
+
+        
+    
+
+
+  
+
+    
+
+      
+    
+
+    
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    
+
+  
+
+
+
+
+  
+    Find code, projects, and people on GitHub:
+    
+
+      
+            Search
+
+    
+
+
+    
+
+      Contact Support —
+      GitHub Status —
+      @githubstatus
+    
+
+
+
+
+  
+
+  
+
+
+            
+  
+Site-wide Links
+
+  
+
+    
+
+      
+
+        
+          
+        
+
+        
+Subscribe to our developer newsletter
+
+        
+Get tips, technical guides, and best practices. Twice a month.
+
+        
+  Subscribe
+  
+  
+
+
+      
+
+
+      
+        
+
+          Platform
+        
+
+
+        
+
+          
+
+            Features
+          
+
+          
+
+            Enterprise
+          
+
+          
+
+            Copilot
+          
+
+          
+
+            AI
+          
+
+          
+
+            Security
+          
+
+          
+
+            Pricing
+          
+
+          
+
+            Team
+          
+
+          
+
+            Resources
+          
+
+          
+
+            Roadmap
+          
+
+          
+
+            Compare GitHub
+          
+
+        
+
+      
+
+      
+        
+
+          Ecosystem
+        
+
+
+        
+
+          
+
+            Developer API
+          
+
+          
+
+            Partners
+          
+
+          
+
+            Education
+          
+
+          
+
+            GitHub CLI
+          
+
+          
+
+            GitHub Desktop
+          
+
+          
+
+            GitHub Mobile
+          
+
+          
+
+            GitHub Marketplace
+          
+
+          
+
+            MCP Registry
+          
+
+        
+
+      
+
+      
+        
+
+          Support
+        
+
+
+        
+
+          
+
+            Docs
+          
+
+
+          
+
+            Community Forum
+          
+
+
+          
+
+            Professional Services
+          
+
+
+          
+
+            Premium Support
+          
+
+
+          
+
+            Skills
+          
+
+
+          
+
+            Status
+          
+
+
+          
+
+            Contact GitHub
+          
+
+        
+
+      
+
+      
+        
+
+          Company
+        
+
+
+        
+
+          
+
+            About
+          
+
+          
+
+            Why GitHub
+          
+
+          
+
+            Customer stories
+          
+
+          
+
+            Blog
+          
+
+          
+
+            The ReadME Project
+          
+
+          
+
+            Careers
+          
+
+          
+
+            Newsroom
+          
+
+          
+
+            Inclusion
+          
+
+          
+
+            Social Impact
+          
+
+          
+
+            Shop
+          
+
+        
+
+      
+    
+
+  
+
+
+  
+
+    
+
+      
+        
+
+          
+
+            © 2025 GitHub, Inc.
+          
+
+
+          
+
+            Terms
+          
+
+
+          
+
+            Privacy
+            (Updated 02/2024)02/2024
+          
+
+
+          
+
+            Sitemap
+          
+
+
+          
+
+            What is Git?
+          
+
+
+            
+
+  
+    
+       Manage cookies
+    
+  
+
+
+
+
+
+  
+    
+      Do not share my personal information
+    
+  
+
+
+
+        
+
+      
+
+      
+        
+
+
+    
+
+      
+        
+        GitHub on LinkedIn
+      
+    
+
+    
+
+      
+        Instagram
+        GitHub on Instagram
+      
+    
+
+    
+
+      
+        
+        GitHub on YouTube
+      
+    
+
+    
+
+      
+        
+        GitHub on X
+      
+    
+
+    
+
+      
+        TikTok
+        GitHub on TikTok
+      
+    
+
+    
+
+      
+        Twitch
+        GitHub on Twitch
+      
+    
+
+    
+
+      
+        
+        GitHub’s organization on GitHub
+      
+    
+
+
+
+
+          
+
+  
+    
+    
+    
+          
+    
+
+          English
+          
+    
+
+        
+  
+
+
+  
+
+    
+
+      
+
+        
+
+                
+
+    
+      
+      
+                  
+
+            
+    
+
+          
+
+          English
+
+      
+
+
+                
+
+    
+      
+      
+                  
+
+            
+          
+
+          Português (Brasil)
+
+      
+
+
+                
+
+    
+      
+      
+                  
+
+            
+          
+
+          Español (América Latina)
+
+      
+
+
+                
+
+    
+      
+      
+                  
+
+            
+          
+
+          日本語
+
+      
+
+
+                
+
+    
+      
+      
+                  
+
+            
+          
+
+          한국어
+
+      
+
+
+        
+
+      
+
+    
+
+  
+
+  
+
+      
+    
+
+  
+
+
+
+
+
+    
+
+
+
+
+  
+
+    
+    
+
+    
+      
+    
+
+    
+    You can’t perform that action at this time.
+  
+
+
+    
+
+    
+
+  
+
+  
+
+
+
+
+    
+
+
+
+    
+      .user-mention[href$="/andre13lamounier"] {
+        color: var(--color-user-mention-fg);
+        background-color: var(--bgColor-attention-muted, var(--color-attention-subtle));
+        border-radius: 2px;
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+      .user-mention[href$="/andre13lamounier"]:before,
+      .user-mention[href$="/andre13lamounier"]:after {
+        content: '';
+        display: inline-block;
+        width: 2px;
+      }
+    
+
+
+    
+
+    
+
+
+    
+
+
+  
+
+
