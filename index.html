@@ -1,1 +1,8 @@
-<!DOCTYPE html><html><head><title>Painel de Saldo</title></head><body><h1>Sistema funcionando!</h1></body></html>
+Painelbody{background:#0b1020;color:#fff;font-family:Arial;padding:20px}.login{background:#121a2a;padding:20px;border-radius:16px;max-width:300px;margin:50px auto}input{width:100%;padding:10px;margin:5px 0;border:1px solid #333;background:#101a2e;color:#fff;border-radius:8px}button{width:100%;padding:12px;background:#1d3a66;color:#fff;border:none;border-radius:8px;cursor:pointer}.error{color:#ff6b6b}.app{display:none}.card{background:#121a2a;padding:16px;margin:10px 0;border-radius:12px}
+Entrar
+
+Entrar
+Painel de Saldo
+Saldo Total
+R$ 0,00
+const EXPECTED_USER="lamounier16@gmail.com";const EXPECTED_PASS="helilamounier16";function showApp(){document.getElementById("loginView").style.display="none";document.getElementById("app").style.display="block"}document.getElementById("loginBtn").addEventListener("click",()=>{const email=document.getElementById("email").value.trim();const pass=document.getElementById("password").value;const errEl=document.getElementById("loginError");if(email===EXPECTED_USER&&pass===EXPECTED_PASS){errEl.textContent="";showApp();document.getElementById("saldoTotal").textContent="R$ 150.000,00"}else{errEl.textContent="Usuário ou senha inválidos."}})
