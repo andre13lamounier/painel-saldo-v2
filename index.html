@@ -359,32 +359,32 @@
         <div class="cards-grid">
             <div class="card">
                 <div class="card-title">Valor Total</div>
-                <div class="card-value" id="valorTotal">R$ 0,00</div>
+                <div class="card-value" id="valorTotal">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
             <div class="card">
                 <div class="card-title">Rendimento Total</div>
-                <div class="card-value" id="rendimentoTotal">R$ 0,00</div>
+                <div class="card-value" id="rendimentoTotal">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
             <div class="card">
                 <div class="card-title">Saldo Aplicação CDI</div>
-                <div class="card-value" id="saldoAplicacaoCDI">R$ 0,00</div>
+                <div class="card-value" id="saldoAplicacaoCDI">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
             <div class="card">
                 <div class="card-title">Rendimento Aplicação CDI</div>
-                <div class="card-value" id="rendimentoAplicacaoCDI">R$ 0,00</div>
+                <div class="card-value" id="rendimentoAplicacaoCDI">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
             <div class="card">
                 <div class="card-title">Saldo Conta CDI</div>
-                <div class="card-value" id="saldoContaCDI">R$ 0,00</div>
+                <div class="card-value" id="saldoContaCDI">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
             <div class="card">
                 <div class="card-title">Rendimento Conta CDI</div>
-                <div class="card-value" id="rendimentoContaCDI">R$ 0,00</div>
+                <div class="card-value" id="rendimentoContaCDI">Carregando...</div>
                 <div class="card-change">--</div>
             </div>
         </div>
@@ -415,31 +415,16 @@
         // Configurações da planilha
         const SHEET_ID = '160_qi26RBoTF-0iIfnHwAWSVovCqER5NtDsCu3oococ';
         
-        // URLs diretas da planilha com diferentes métodos
-        const SHEET_METHODS = [
-            // Método 1: CSV direto
-            {
-                name: 'CSV Direto',
-                url: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=2092919810`,
-                parser: parseCSV
-            },
-            // Método 2: JSON via Google Sheets API pública
-            {
-                name: 'JSON Público',
-                url: `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A1:Z100?key=AIzaSyD-9tSrke72PouQMnMX-a7UAHXE6Ue-KZ8`,
-                parser: parseJSON
-            },
-            // Método 3: HTML parsing
-            {
-                name: 'HTML Parsing',
-                url: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=2092919810`,
-                parser: parseHTML
-            }
-        ];
+        // URLs para diferentes abas da planilha
+        const SHEET_URLS = {
+            resumo: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=2092919810`,
+            depositos: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`,
+            rendimentoCDB: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1234567890`,
+            rendimentoCDI: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0987654321`
+        };
 
         let dadosCarregados = false;
         let extratoData = [];
-        let currentMethodIndex = 0;
 
         function login() {
             const email = document.getElementById('email').value;
@@ -485,133 +470,110 @@
         }
 
         async function carregarDados() {
+            console.log('Iniciando carregamento de dados...');
             setStatus(false);
             
-            // Tentar múltiplos métodos
-            for (let i = 0; i < SHEET_METHODS.length; i++) {
-                const method = SHEET_METHODS[i];
-                console.log(`Tentando método: ${method.name}`);
+            try {
+                // Tentar carregar dados da planilha
+                const response = await fetch(SHEET_URLS.resumo, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
                 
-                try {
-                    const response = await fetch(method.url, {
-                        method: 'GET',
-                        mode: 'cors',
-                        headers: {
-                            'Accept': '*/*',
-                        }
-                    });
+                if (response.ok) {
+                    const csvText = await response.text();
+                    console.log('CSV recebido:', csvText);
                     
-                    if (response.ok) {
-                        const data = await response.text();
-                        if (data && data.length > 100) {
-                            const parsedData = method.parser(data);
-                            if (parsedData && parsedData.valorTotal > 0) {
-                                atualizarCards(parsedData);
-                                setStatus(true);
-                                dadosCarregados = true;
-                                console.log(`Sucesso com método: ${method.name}`);
-                                break;
-                            }
+                    if (csvText && csvText.length > 50) {
+                        const dadosParsed = parseCSVData(csvText);
+                        if (dadosParsed) {
+                            atualizarCards(dadosParsed);
+                            setStatus(true);
+                            dadosCarregados = true;
+                            console.log('Dados carregados com sucesso:', dadosParsed);
+                        } else {
+                            console.log('Erro no parsing, usando fallback');
+                            usarDadosFallback();
                         }
+                    } else {
+                        console.log('CSV vazio, usando fallback');
+                        usarDadosFallback();
                     }
-                } catch (error) {
-                    console.log(`Erro no método ${method.name}:`, error);
+                } else {
+                    console.log('Erro na resposta HTTP, usando fallback');
+                    usarDadosFallback();
                 }
-            }
-            
-            // Se nenhum método funcionou, usar dados de fallback
-            if (!dadosCarregados) {
-                console.log('Usando dados de fallback');
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
                 usarDadosFallback();
-                setStatus(false);
             }
             
             // Carregar extrato
             await carregarExtrato();
         }
 
-        function parseCSV(csvText) {
+        function parseCSVData(csvText) {
             try {
                 const lines = csvText.split('\n');
-                if (lines.length > 1) {
-                    const data = lines[1].split(',');
-                    
-                    return {
-                        valorTotal: parseFloat(data[6]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimentoTotal: parseFloat(data[7]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        aplicacao1: parseFloat(data[2]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimento1: parseFloat(data[3]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        aplicacao2: parseFloat(data[4]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimento2: parseFloat(data[5]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0
-                    };
-                }
-            } catch (error) {
-                console.error('Erro no parseCSV:', error);
-            }
-            return null;
-        }
-
-        function parseJSON(jsonText) {
-            try {
-                const data = JSON.parse(jsonText);
-                if (data.values && data.values.length > 1) {
-                    const row = data.values[1];
-                    
-                    return {
-                        valorTotal: parseFloat(row[6]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimentoTotal: parseFloat(row[7]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        aplicacao1: parseFloat(row[2]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimento1: parseFloat(row[3]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        aplicacao2: parseFloat(row[4]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                        rendimento2: parseFloat(row[5]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0
-                    };
-                }
-            } catch (error) {
-                console.error('Erro no parseJSON:', error);
-            }
-            return null;
-        }
-
-        function parseHTML(htmlText) {
-            try {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlText, 'text/html');
-                const rows = doc.querySelectorAll('tr');
+                console.log('Linhas do CSV:', lines);
                 
-                if (rows.length > 1) {
-                    const cells = rows[1].querySelectorAll('td');
-                    if (cells.length >= 8) {
-                        return {
-                            valorTotal: parseFloat(cells[6]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                            rendimentoTotal: parseFloat(cells[7]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                            aplicacao1: parseFloat(cells[2]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                            rendimento1: parseFloat(cells[3]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                            aplicacao2: parseFloat(cells[4]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
-                            rendimento2: parseFloat(cells[5]?.textContent?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0
-                        };
+                if (lines.length > 1) {
+                    // Procurar pela linha com dados (pode não ser a linha 1)
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (line && line.includes('R$') || line.includes(',')) {
+                            const data = line.split(',');
+                            console.log('Dados da linha:', data);
+                            
+                            if (data.length >= 8) {
+                                // Mapeamento correto baseado na estrutura da planilha
+                                // Coluna C: Aplicação 1, D: Rendimento 1, E: Aplicação 2, F: Rendimento 2, G: Total, H: Rendimento Total
+                                const aplicacao1 = parseFloat(data[2]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                const rendimento1 = parseFloat(data[3]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                const aplicacao2 = parseFloat(data[4]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                const rendimento2 = parseFloat(data[5]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                const valorTotal = parseFloat(data[6]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                const rendimentoTotal = parseFloat(data[7]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+                                
+                                console.log('Valores parseados:', {
+                                    aplicacao1, rendimento1, aplicacao2, rendimento2, valorTotal, rendimentoTotal
+                                });
+                                
+                                // Verificar se pelo menos um valor é maior que 0
+                                if (valorTotal > 0 || aplicacao1 > 0 || aplicacao2 > 0) {
+                                    return {
+                                        valorTotal,
+                                        rendimentoTotal,
+                                        aplicacao1,
+                                        rendimento1,
+                                        aplicacao2,
+                                        rendimento2
+                                    };
+                                }
+                            }
+                        }
                     }
                 }
             } catch (error) {
-                console.error('Erro no parseHTML:', error);
+                console.error('Erro no parseCSVData:', error);
             }
             return null;
         }
 
         function usarDadosFallback() {
-            // Dados reais da planilha como fallback
-            const dadosFallback = {
-                valorTotal: 860459.76,
-                rendimentoTotal: 148574.61,
-                aplicacao1: 634463.77,
-                rendimento1: 134789.93,
-                aplicacao2: 225995.99,
-                rendimento2: 13784.68
-            };
-            
-            atualizarCards(dadosFallback);
+            console.log('Usando dados de fallback');
+            // Não usar dados hardcoded - mostrar erro de carregamento
+            document.getElementById('valorTotal').textContent = 'Erro ao carregar';
+            document.getElementById('rendimentoTotal').textContent = 'Erro ao carregar';
+            document.getElementById('saldoAplicacaoCDI').textContent = 'Erro ao carregar';
+            document.getElementById('rendimentoAplicacaoCDI').textContent = 'Erro ao carregar';
+            document.getElementById('saldoContaCDI').textContent = 'Erro ao carregar';
+            document.getElementById('rendimentoContaCDI').textContent = 'Erro ao carregar';
+            setStatus(false);
         }
 
         function atualizarCards(dados) {
+            console.log('Atualizando cards com dados:', dados);
             document.getElementById('valorTotal').textContent = formatarMoeda(dados.valorTotal);
             document.getElementById('rendimentoTotal').textContent = formatarMoeda(dados.rendimentoTotal);
             document.getElementById('saldoAplicacaoCDI').textContent = formatarMoeda(dados.aplicacao1);
@@ -621,27 +583,65 @@
         }
 
         async function carregarExtrato() {
-            // Dados de exemplo do extrato baseados na planilha
+            try {
+                // Tentar carregar dados do extrato da aba de depósitos
+                const response = await fetch(SHEET_URLS.depositos);
+                if (response.ok) {
+                    const csvText = await response.text();
+                    const extratoFromCSV = parseExtratoCSV(csvText);
+                    if (extratoFromCSV && extratoFromCSV.length > 0) {
+                        extratoData = extratoFromCSV;
+                        renderizarExtrato();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar extrato:', error);
+            }
+            
+            // Fallback: dados de exemplo baseados na planilha
             extratoData = [
                 { tipo: 'Depósitos', detalhe: 'Transferência CEX', valor: 100000, data: '17/05/2022' },
                 { tipo: 'Depósitos', detalhe: 'Transferência CEX', valor: 70000, data: '18/05/2022' },
                 { tipo: 'Depósitos', detalhe: 'Transferência CEX', valor: 8000, data: '18/05/2022' },
                 { tipo: 'Depósitos', detalhe: 'Recebimento Casa Sete Lagoas', valor: 100000, data: '12/04/2023' },
-                { tipo: 'Depósitos', detalhe: 'Recebimento Casa Sete Lagoas', valor: 2000, data: '14/04/2023' },
-                { tipo: 'Depósitos', detalhe: 'Recebimento Casa Sete Lagoas', valor: 13000, data: '17/04/2023' },
-                { tipo: 'Depósitos', detalhe: 'Recebimento Casa Sete Lagoas', valor: 15000, data: '31/05/2023' },
                 { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 25.62, data: '17/05/2022' },
-                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 43.56, data: '18/05/2022' },
-                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 45.62, data: '19/05/2022' },
-                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 45.63, data: '20/05/2022' },
-                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 45.64, data: '21/05/2022' },
-                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 45.66, data: '22/05/2022' }
+                { tipo: 'Rendimento CDI', detalhe: 'Rendimento diário', valor: 43.56, data: '18/05/2022' }
             ];
-            
             renderizarExtrato();
         }
 
+        function parseExtratoCSV(csvText) {
+            try {
+                const lines = csvText.split('\n');
+                const extrato = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line) {
+                        const data = line.split(',');
+                        if (data.length >= 4) {
+                            extrato.push({
+                                tipo: 'Depósitos',
+                                detalhe: data[3] || 'Depósito',
+                                valor: parseFloat(data[1]?.replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
+                                data: data[0]
+                            });
+                        }
+                    }
+                }
+                
+                return extrato;
+            } catch (error) {
+                console.error('Erro no parseExtratoCSV:', error);
+                return null;
+            }
+        }
+
         function formatarMoeda(valor) {
+            if (isNaN(valor) || valor === null || valor === undefined) {
+                return 'R$ 0,00';
+            }
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
@@ -675,6 +675,15 @@
         function atualizarDados() {
             atualizarTimestamp();
             dadosCarregados = false;
+            
+            // Resetar cards para mostrar carregamento
+            document.getElementById('valorTotal').textContent = 'Carregando...';
+            document.getElementById('rendimentoTotal').textContent = 'Carregando...';
+            document.getElementById('saldoAplicacaoCDI').textContent = 'Carregando...';
+            document.getElementById('rendimentoAplicacaoCDI').textContent = 'Carregando...';
+            document.getElementById('saldoContaCDI').textContent = 'Carregando...';
+            document.getElementById('rendimentoContaCDI').textContent = 'Carregando...';
+            
             carregarDados();
         }
 
